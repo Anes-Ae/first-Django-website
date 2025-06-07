@@ -37,6 +37,12 @@ INSTALLED_APPS = [
 
     # local apps
     'core',
+    'categories',
+    'blog',
+
+    # third party apps
+    'tinymce',
+
 ]
 
 MIDDLEWARE = [
