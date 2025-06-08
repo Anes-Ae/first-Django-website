@@ -5,9 +5,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import reverse
 
 from tinymce.models import HTMLField
-
-class Tag(models.Model):
-    name = models.CharField(max_length=100)
+from tags.models import Tag
 
 
 class PostManager(models.Manager):
@@ -19,7 +17,7 @@ class Post(models.Model):
     POST_STATUS_DRAFT = 'drf'
     POST_STATUS_SCHEDULED = 'SCD'
 
-    POST_STATUS_CHOICES = (
+    POST_STATUS_CHOICES = ( 
         (POST_STATUS_PUBLISHED, 'published'),
         (POST_STATUS_SCHEDULED, 'scheduled'),
         (POST_STATUS_DRAFT, 'draft'),
@@ -43,7 +41,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    object = PostManager()
+    objects = PostManager()
 
     def __str__(self):
         return f'title: {self.title} author: {self.author}'
@@ -75,7 +73,7 @@ class Comment(models.Model):
     COMMENT_STATUS_CHOICES = (
         (COMMENT_STATUS_PUBLISHED, 'published'),
         (COMMENT_STATUS_DRAFT, 'draft'),
-        (COMMENT_STATUS_REJECTED, 'scheduled'),
+        (COMMENT_STATUS_REJECTED, 'rejected'),
     )
 
     post = models.ForeignKey(Post, on_delete=models.PROTECT, related_name='comments', verbose_name=_('post'))
