@@ -35,7 +35,7 @@ class Post(models.Model):
     status = models.CharField(_('status'), max_length=3, choices=POST_STATUS_CHOICES, default=POST_STATUS_DRAFT)
     categories = models.ManyToManyField('categories.Category', related_name='posts', verbose_name=_('categories'))
     tags = models.ManyToManyField(Tag, related_name='posts')
-    views = models.PositiveIntegerField(_('views'), default=0)
+    views = models.ManyToManyField(get_user_model(), related_name='liked_posts')
     likes = models.PositiveIntegerField(_('likes'), default=0)
     is_featured = models.BooleanField(_('is featured'), default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -49,16 +49,16 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('post-detail', args=[self.slug])
 
+    def total_likes(self):
+        self.likes.count()
+
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = self.title.replace(' ', '-')
         super().save(*args, **kwargs)
 
-    def is_visible(self):
-        return (
-                (self.status == 'pub') or
-                (self.status == 'scheduled' and self.publish <= timezone.now())
-        )
+
     class Meta:
         verbose_name = _('post')
         verbose_name_plural = _('blog posts')
