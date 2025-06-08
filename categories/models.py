@@ -2,9 +2,7 @@ from django.db import models
 from django.shortcuts import reverse
 from django.utils.text import gettext_lazy as _, slugify
 
-
-class Tag(models.Model):
-    name = models.CharField(max_length=100)
+from tags.models import Tag
 
 
 class Category(models.Model):
