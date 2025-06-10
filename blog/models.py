@@ -12,14 +12,16 @@ class PostManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status='pub').all()
 
+class CommentManager(models.Model):
+    def get_queryset(self):
+        return super().get_queryset().filter(status='pub').all()
+
 class Post(models.Model):
     POST_STATUS_PUBLISHED = 'pub'
     POST_STATUS_DRAFT = 'drf'
-    POST_STATUS_SCHEDULED = 'SCD'
 
     POST_STATUS_CHOICES = ( 
         (POST_STATUS_PUBLISHED, 'published'),
-        (POST_STATUS_SCHEDULED, 'scheduled'),
         (POST_STATUS_DRAFT, 'draft'),
     )
 
@@ -35,8 +37,8 @@ class Post(models.Model):
     status = models.CharField(_('status'), max_length=3, choices=POST_STATUS_CHOICES, default=POST_STATUS_DRAFT)
     categories = models.ManyToManyField('categories.Category', related_name='posts', verbose_name=_('categories'))
     tags = models.ManyToManyField(Tag, related_name='posts')
-    views = models.ManyToManyField(get_user_model(), related_name='liked_posts')
-    likes = models.PositiveIntegerField(_('likes'), default=0)
+    views = models.PositiveIntegerField(_('views'), default=0)
+    likes = models.ManyToManyField(get_user_model(), related_name='liked_posts', verbose_name=_('likes'))
     is_featured = models.BooleanField(_('is featured'), default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -89,3 +91,5 @@ class Comment(models.Model):
     class Meta:
         verbose_name = _('comment')
         verbose_name_plural = _('comments')
+
+    objects = CommentManager()

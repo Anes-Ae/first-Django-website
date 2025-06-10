@@ -37,7 +37,7 @@ class CommentAdmin(admin.ModelAdmin):
     ]
 
 
-# @admin.register(Post)
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = [
         'title',
@@ -45,7 +45,7 @@ class PostAdmin(admin.ModelAdmin):
         'description',
         'status',
         'views',
-        'likes ',
+        'total_likes',
         'is_featured',
         'created_at',
         'updated_at',
@@ -53,6 +53,7 @@ class PostAdmin(admin.ModelAdmin):
     readonly_fields = [
         'created_at',
         'updated_at',
+        'total_likes',
     ]
     list_filter = [
         'status',
