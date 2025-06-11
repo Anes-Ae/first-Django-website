@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.text import gettext_lazy as _
-from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.shortcuts import reverse
 
@@ -81,7 +80,11 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.PROTECT, related_name='comments', verbose_name=_('post'))
     display_name = models.CharField(_('display name'), max_length=100)
     text = models.TextField(_('text'))
-    status = models.CharField(_('status'), max_length=3, choices=COMMENT_STATUS_CHOICES, default=COMMENT_STATUS_DRAFT)
+    status = models.CharField(
+                             _('status'),
+                              max_length=3,
+                              choices=COMMENT_STATUS_CHOICES,
+                              default=COMMENT_STATUS_DRAFT)
     created_at = models.DateTimeField(_('created at'), auto_now_add=True)
     updated_at = models.DateTimeField(_('updated at'), auto_now=True)
 
