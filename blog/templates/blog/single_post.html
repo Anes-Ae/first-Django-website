@@ -1,6 +1,6 @@
 {% extends '_base.html' %}
 {% load i18n %}
-{% load crispy_forms_tags %}
+
 {% block page_title %} {{ post.title }} {% endblock %}
 
 {% block page_content %}
@@ -41,7 +41,8 @@
                     <!-- Comment Form -->
                     <form method="post" action="{% url 'comment-create' post.slug %}" class="mb-8">
                          {% csrf_token %}
-                        {{ comment_form|crispy }}
+                        {{ comment_form }}
+                        <button type="submit">submit</button>
                         </form>
 
 
@@ -100,20 +101,18 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <h3 class="text-xl font-bold mb-4 text-gray-800">پست‌های مرتبط</h3>
             <div class="space-y-4">
-                <a href="#" class="flex items-center gap-4 group">
-                    <img src="https://picsum.photos/100/100" alt="پست مرتبط" class="w-16 h-16 rounded-lg object-cover">
+                 {% for post in Related_posts %}
+                <a href="{{ post.get_absolute_url }}" class="flex items-center gap-4 group">
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-16 h-16 rounded-lg object-cover">
                     <div>
-                        <h4 class="font-semibold text-gray-800 group-hover:text-blue-600">عنوان پست مرتبط</h4>
-                        <p class="text-sm text-gray-600">۲۰ فروردین ۱۴۰۳</p>
+                        <h4 class="font-semibold text-gray-800 group-hover:text-blue-600">{{ post.title }}</h4>
+                        <p class="text-sm text-gray-600">{{ post.created_at }}</p>
                     </div>
                 </a>
-                <a href="#" class="flex items-center gap-4 group">
-                    <img src="https://picsum.photos/100/101" alt="پست مرتبط" class="w-16 h-16 rounded-lg object-cover">
-                    <div>
-                        <h4 class="font-semibold text-gray-800 group-hover:text-blue-600">یک پست مرتبط دیگر</h4>
-                        <p class="text-sm text-gray-600">۱۸ فروردین ۱۴۰۳</p>
-                    </div>
-                </a>
+                {% empty %}
+                <p>پست مرتبطی یافت نشد</p>
+                {% endfor %}
+
             </div>
         </div>
     </aside>

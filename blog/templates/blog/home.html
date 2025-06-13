@@ -62,20 +62,15 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-xl font-bold mb-4 text-gray-800">پست‌های محبوب</h3>
                     <div class="space-y-4">
-                        <a href="#" class="flex items-center gap-4 group">
-                            <img src="https://picsum.photos/100/100" alt="پست محبوب" class="w-16 h-16 rounded-lg object-cover">
+                        {% for post in featured_posts %}
+                        <a href="{{ post.get_absolute_url }}" class="flex items-center gap-4 group">
+                            <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-16 h-16 rounded-lg object-cover">
                             <div>
-                                <h4 class="font-semibold text-gray-800 group-hover:text-blue-600">عنوان پست محبوب</h4>
-                                <p class="text-sm text-gray-600">۲۰ فروردین ۱۴۰۳</p>
+                                <h4 class="font-semibold text-gray-800 group-hover:text-blue-600">{{ post.title }}</h4>
+                                <p class="text-sm text-gray-600">{{ post.created_at }}</p>
                             </div>
                         </a>
-                        <a href="#" class="flex items-center gap-4 group">
-                            <img src="https://picsum.photos/100/101" alt="پست محبوب" class="w-16 h-16 rounded-lg object-cover">
-                            <div>
-                                <h4 class="font-semibold text-gray-800 group-hover:text-blue-600">یک پست محبوب دیگر</h4>
-                                <p class="text-sm text-gray-600">۱۸ فروردین ۱۴۰۳</p>
-                            </div>
-                        </a>
+                        {% endfor %}
                     </div>
                 </div>
             </aside>

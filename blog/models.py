@@ -9,17 +9,17 @@ from tags.models import Tag
 
 class PostManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(status='pub').all()
+        return super().get_queryset().filter(status='pub').order_by('-created_at')
 
-class CommentManager(models.Model):
+class CommentManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(status='pub').all()
+        return super().get_queryset().filter(status='pub').order_by('-created_at')
 
 class Post(models.Model):
     POST_STATUS_PUBLISHED = 'pub'
     POST_STATUS_DRAFT = 'drf'
 
-    POST_STATUS_CHOICES = ( 
+    POST_STATUS_CHOICES = (
         (POST_STATUS_PUBLISHED, 'published'),
         (POST_STATUS_DRAFT, 'draft'),
     )
@@ -34,7 +34,7 @@ class Post(models.Model):
     reading_time = models.PositiveIntegerField(_('reading_time'), blank=True, null=True, help_text=_('In minutes'))
     description = models.TextField()
     status = models.CharField(_('status'), max_length=3, choices=POST_STATUS_CHOICES, default=POST_STATUS_DRAFT)
-    categories = models.ManyToManyField('categories.Category', related_name='posts', verbose_name=_('categories'))
+    category = models.ForeignKey('categories.Category', on_delete=models.CASCADE,  related_name='posts', verbose_name=_('categories'))
     tags = models.ManyToManyField(Tag, related_name='posts')
     views = models.PositiveIntegerField(_('views'), default=0)
     likes = models.ManyToManyField(get_user_model(), related_name='liked_posts', verbose_name=_('likes'))
@@ -42,7 +42,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    objects = PostManager()
+
 
     def __str__(self):
         return f'title: {self.title} author: {self.author}'
@@ -50,6 +50,7 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('post-detail', args=[self.slug])
 
+    @property
     def total_likes(self):
         self.likes.count()
 
@@ -64,6 +65,8 @@ class Post(models.Model):
         verbose_name = _('post')
         verbose_name_plural = _('blog posts')
 
+    objects = models.Manager()
+    published = PostManager()
 
 
 class Comment(models.Model):
@@ -95,4 +98,5 @@ class Comment(models.Model):
         verbose_name = _('comment')
         verbose_name_plural = _('comments')
 
-    objects = CommentManager()
+    objects = models.Manager()
+    published = CommentManager()
